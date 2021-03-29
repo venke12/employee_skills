@@ -1,0 +1,432 @@
+openapi: 3.0.1
+info:
+  description: Perficient Interview Assignment - Employee Skills Application.
+  version: 0.0.1
+  title: Employee Skills Application
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://localhost:8080
+    description: Development server with TLS Profile    
+paths:
+  /employees:
+    get:
+      tags:
+        - employee
+      summary: Get all Perficient employees.
+      operationId: findAllEmployees
+      responses:
+        '200':
+          description: Retrieved all Perficient employees.
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+          headers:
+            X-Total-Count:
+              description: The total count of Perficient employees returned.
+              schema:
+                type: integer
+    post:
+      tags:
+        - employee
+      summary: Create a Perficient employee.
+      operationId: createEmployee
+      requestBody:
+        description: Perficient employee object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '201':
+          description: Created new Perficient employee.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '422':
+          description: Invalid Perficient employee data sent to server.            
+  /employees/{employeeId}:
+    get:
+      tags:
+        - employee
+      summary: Find a Perficient employee by ID.
+      operationId: findEmployeeById
+      parameters:
+        - name: employeeId
+          in: path
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved a Perficient employee.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Perficient employee not found.
+    put:
+      tags:
+        - employee
+      summary: Update a Perficient employee by ID.
+      operationId: updateEmployeeById
+      parameters:
+        - name: employeeId
+          in: path
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Perficient employee object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: Updated a Perficient employee.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Perficient employee not found.
+        '422':
+          description: Invalid Perficient employee data sent to server.
+    delete:
+      tags:
+        - employee
+      summary: Delete a Perficient employee by ID.
+      operationId: removeEmployeeById
+      parameters:
+        - name: employeeId
+          in: path
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted a Perficient employee.
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Perficient employee not found.
+  /employees/{employeeId}/skills:
+    get:
+      tags:
+        - skill
+      summary: Get all technical skills from a Perficient employee.
+      operationId: findAllSkillsByEmployee
+      parameters:
+        - name: employeeId
+          in: path
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved all technical skills from a Perficient employees.
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+          headers:
+            X-Total-Count:
+              description: >-
+                The total count of technical skills from a Perficient employees
+                returned.
+              schema:
+                type: integer
+    post:
+      tags:
+        - skill
+      summary: Add a technical skill to a Perficient employee.
+      operationId: addSkillToEmployee
+      parameters:
+        - in: path
+          name: employeeId
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Technical skill object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '201':
+          description: Created new technical skill to a Perficient employee.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Perficient employee not found.
+        '422':
+          description: Invalid technical skill data sent to server.            
+  '/employees/{employeeId}/skills/{skillId}':
+    get:
+      tags:
+        - skill
+      summary: 'Find a technical skill, from a Perficient employee, by ID.'
+      operationId: findSkillFromEmployeeById
+      parameters:
+        - in: path
+          name: employeeId
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+        - name: skillId
+          in: path
+          description: GUID of a technical skill.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Retrieved a technical skill, from a Perficient employee, by ID.'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Technical skill or Perficient employee not found.
+    put:
+      tags:
+        - skill
+      summary: 'Update a technical skill, from a Perficient employee, by ID.'
+      operationId: updateSkillFromEmployeeById
+      parameters:
+        - in: path
+          name: employeeId
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+        - name: skillId
+          in: path
+          description: GUID of a technical skill.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Technical skill object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '200':
+          description: 'Updated a technical skill, from a Perficient employee, by ID.'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Technical skill or Perficient employee not found.
+        '422':
+          description: Invalid technical skill data sent to server.
+    delete:
+      tags:
+        - skill
+      summary: 'Delete a technical skill, from a Perficient employee, by ID.'
+      operationId: removeSkillFromEmployeeById
+      parameters:
+        - in: path
+          name: employeeId
+          description: GUID of a Perficient employee.
+          required: true
+          schema:
+            type: string
+        - name: skillId
+          in: path
+          description: GUID of a technical skill.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'Deleted a technical skill, from a Perficient employee, by ID.'
+        '400':
+          description: Invalid ID format.
+        '404':
+          description: Technical skill or Perficient employee not found.
+components:
+  schemas:
+    Address:
+      type: object
+      description: Full location address of an entity.
+      required:
+        - id
+        - street
+        - city
+        - region
+        - postal
+        - country
+      properties:
+        id:
+          type: string
+          description: GUID or UUID format
+          example: 123e4567-e89b-12d3-a456-426655440000
+        street:
+          type: string
+          example: 123 Main St.
+        suite:
+          type: string
+          example: Apt. 456
+        city:
+          type: string
+          example: Detroit
+        region:
+          type: string
+          description: Two or three character code format.
+          example: MI
+        postal:
+          type: string
+          description: Postal code
+          example: '48201'
+        country:
+          type: string
+          description: Two character code format based on ISO 3166-1
+          example: US
+    Employee:
+      description: A Perficient staff member
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - address
+        - companyEmail
+        - birthDate
+        - hiredDate
+        - role
+      properties:
+        id:
+          type: string
+          description: GUID or UUID format
+          example: 123e4567-e89b-12d3-a456-426655440000
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        address:
+          $ref: '#/components/schemas/Address'
+        contactEmail:
+          type: string
+          description: An email address to contact the individual.
+          example: johndoe@example.com
+        companyEmail:
+          type: string
+          description: The assigned email of the employee.
+          example: john.doe@perficient.com
+        birthDate:
+          type: string
+          description: The birthdate of the employee.
+        hiredDate:
+          type: string
+          description: The hired or starting date of the employee.
+        role:
+          type: string
+          description: The role or title of the employee.
+          default: Technical Consultant
+          enum:
+            - Technical Consultant
+            - Project Manager
+            - Director
+            - Chief
+        businessUnit:
+          type: string
+          description: Employee is part of another business unit besides Detroit GEO.
+          enum:
+            - Digital Experience Group
+            - Adobe
+            - IBM NBU
+            - API Management
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+          description: >-
+            A list of technical skills the Perficient employee has experienced
+            with.
+        assignedTo:
+          $ref: '#/components/schemas/Employee'
+          description: >-
+            An individual the Perficient employee reports to for (future)
+            assignments and time cards. Usually a director or project manager.
+    Field:
+      type: object
+      description: A technical field of interest.
+      required:
+        - id
+        - name
+        - type
+      properties:
+        id:
+          type: string
+          description: GUID or UUID format
+          example: 123e4567-e89b-12d3-a456-426655440000
+        name:
+          type: string
+          description: Name of the technical field.
+          example: Java
+        type:
+          type: string
+          description: The type of the technical field
+          example: Software Development
+    Skill:
+      type: object
+      description: An object representing the amount of experience in a technical field.
+      required:
+        - id
+        - field
+        - experience
+      properties:
+        id:
+          type: string
+          description: GUID or UUID format
+          example: 123e4567-e89b-12d3-a456-426655440000
+        field:
+          $ref: '#/components/schemas/Field'
+        experience:
+          type: integer
+          format: int32
+          description: The amount of experienced measured in months.
+          default: 0
+          minimum: 0
+          example: 60
+        summary:
+          type: string
+          description: A summary of the experience with the technical skill.
+          example: Worked with mulit-threading and generics.
